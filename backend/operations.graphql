@@ -1,0 +1,253 @@
+Juan
+
+"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NTAxOWJiYTQ5ZTYxY2RhMjI3ODllZiIsImVtYWlsIjoianVhbkBjb2xsYW50ZXMuZWMiLCJub21icmUiOiJKdWFuIiwiYXBlbGxpZG8iOiJDb2xsYW50ZXMiLCJpYXQiOjE2ODMwNDI4MzQsImV4cCI6MTY4MzEyOTIzNH0.T1IcxP0GcPTMabwloF0aIIzeB-tr98n64uyVt1quLco"
+
+
+
+
+Jose
+"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NTAxNzRjMmZkMjQzODYxYWMwYmMzMCIsImVtYWlsIjoiam9zZUBjb2xsYW50ZXMuZWMiLCJub21icmUiOiJKb3NlIiwiYXBlbGxpZG8iOiJDb2xsYW50ZXMiLCJpYXQiOjE2ODMwNDMyNTksImV4cCI6MTY4MzEyOTY1OX0.Me6IJbBfuVcnBFftyQrJLBbAxQeo2fIStJjPS1goz8Q"
+
+
+mutation NuevoUsuario ($input: UsuarioInput){
+  nuevoUsuario(input:$input){
+    # Campos que va a retornar
+      id,
+    nombre,
+    apellido,
+    email,
+    creado
+  }
+}
+
+variables:
+{
+  "input": 
+  {
+    "nombre":"Juan",
+    "apellido":"Collantes",
+    "email":"juan@collantes.ec",
+    "password":"123123123"
+  }
+}
+
+mutation AutenticarUsuario($input: AuthInput) {
+  autenticarUsuario(input: $input) {
+    token
+  }
+}
+variables:
+{
+  "input": {
+    "email": "juan@collantes.ec",
+     "password": "123123123"
+  }
+}
+
+query ObtenerUsuario($token: String!) {
+  obtenerUsuario(token: $token) {
+    email
+    id
+    creado
+    apellido
+    nombre
+  }
+}
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NTAxOWJiYTQ5ZTYxY2RhMjI3ODllZiIsImVtYWlsIjoianVhbkBjb2xsYW50ZXMuZWMiLCJub21icmUiOiJKdWFuIiwiYXBlbGxpZG8iOiJDb2xsYW50ZXMiLCJpYXQiOjE2ODI5NzgzNTYsImV4cCI6MTY4MzA2NDc1Nn0.rg8G_JZv-mUBW4VgkXZ9cohxd1BvFn6JI1k_rLvFDV8"
+}
+
+mutation Mutation($input: ProductoInput) {
+  nuevoProducto(input: $input) {
+    creado
+    existencia
+    id
+    nombre
+    precio
+  }
+}
+{
+  "input": {
+    "existencia": 100,
+    "nombre": "Mous inhalambrico",
+    "precio": 49.99
+  }
+}
+
+query Query {
+  obtenerProductos {
+    creado
+    existencia
+    id
+    precio
+    nombre
+  }
+}
+
+query Query($input: IdProductInput) {
+  obtenerProductoPorId(input: $input) {
+    id
+    nombre
+    existencia
+    precio
+    creado
+  }
+}
+{
+  "input": {
+    "id": "64504699a8e7b02d8b56a23d"
+  }
+}
+
+mutation ActualizaProducto($id: ID!, $input: ProductoInput) {
+  actualizaProducto(id: $id, input: $input) {
+    nombre
+    existencia
+    precio
+    creado
+    id
+  }
+}
+  
+  {
+  "id":"6450461ea8e7b02d8b56a23a",
+  "input": {
+    "nombre": "laptop lenovo",
+    "existencia": 300,
+    "precio": 999.99
+  }}
+
+
+mutation eliminarProducto($id: ID!) {
+  eliminarProducto(id: $id)
+}
+{
+  "id": "6450461ea8e7b02d8b56a23a"
+}
+
+mutation NuevoCliente($input: ClienteInput) {
+  nuevoCliente(input: $input) {
+    id
+    nombre
+    apellido
+    email
+    empresa
+    telefono
+    vendedor
+    creado
+  }
+}
+{
+  "input": {
+    "nombre": "Cliente1",
+    "apellido": "Cliente1",
+    "email": "cliente1@gmail.com",
+    "empresa": "empresa cliente1",
+    "telefono": "0997154016"
+  }
+}
+
+query Query {
+  obtenerClientes {
+    nombre
+    apellido
+    email
+    empresa
+    vendedor
+    creado
+  }
+}
+
+query ObtenerClientesPorVendedor {
+  obtenerClientesPorVendedor {
+    nombre
+    apellido
+    email
+  }
+}
+query Query($obtenerClienteId: ID!) {
+  obtenerCliente(id: $obtenerClienteId) {
+    nombre
+    apellido
+  }
+}
+
+mutation Mutation($actualizarClienteId: ID!, $input: ClienteInput) {
+  actualizarCliente(id: $actualizarClienteId, input: $input) {
+    nombre
+    apellido
+    email
+    empresa
+  }
+}
+{
+  "actualizarClienteId": "645089027219cef31547032b",
+  "input": {
+    "nombre": "Cliente1 xyz",
+    "apellido": "Cliente 1 xyz",
+    "email": "cliente1@gmail.com",
+    "empresa": "Empresa Cliente1 xyz"
+  }
+}
+
+mutation Mutation($eliminarClienteId: ID!) {
+  eliminarCliente(id: $eliminarClienteId)
+}
+{
+  "eliminarClienteId": "645089027219cef31547032b"
+}
+
+mutation Mutation($input: PedidoInput) {
+  nuevoPedido(input: $input) {
+    id
+    pedido {
+      id
+      cantidad
+    }
+    total
+    cliente
+    estado
+  }
+}
+{
+  
+  "input": {
+    "pedido": [
+      {"id":"64504699a8e7b02d8b56a23d","cantidad":10}
+      
+    ],
+    "total": 300,
+    "cliente": "64512d7bb7d82836a181f2d4",
+    "estado": "PENDIENTE"
+  }
+}
+
+query Query {
+  obtenerPedidos {
+    id
+    pedido {
+      id
+      cantidad
+    }
+    total
+    cliente
+    vendedor
+    fecha
+    estado
+  }
+}
+
+query ObtenerPedidosVendedor {
+  obtenerPedidosVendedor {
+    id
+    pedido {
+      id
+      cantidad
+    }
+    total
+    cliente
+    vendedor
+    fecha
+    estado
+  }
+}

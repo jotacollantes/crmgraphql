@@ -1,0 +1,14 @@
+services:
+  crmgraphqldb:
+    image: mongo:6.0.1
+    container_name: crmgraphql-database
+    ports:
+      - 27017:27017
+    volumes:
+    #La informacion de mongo se va a grabar en /mongo del filesystem del proyecto y en el filesystem de la imagen
+      - mongoDbData:/data/db
+
+volumes:
+  #Si no se especifica que es un volumen externo o un volumen ya existente va a crear el volumen: <nombre del proyecto>-<nombre del volumen>
+  mongoDbData:
+    external: true
