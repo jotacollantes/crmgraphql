@@ -1,0 +1,2 @@
+#Comando para iniciar proyecto
+yarn create next-app --typescript .
