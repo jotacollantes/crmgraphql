@@ -23,5 +23,6 @@ const ProductoSchema = mongoose.Schema({
     }
     
 })
-
+//Creamos un indice de tipo text para las busquedas por nombre de producto, necesario para el operador $text
+ProductoSchema.index({nombre:'text'});
 export const Producto= mongoose.model('Producto',ProductoSchema)

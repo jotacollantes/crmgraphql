@@ -96,6 +96,88 @@ export const resolvers = {
             
             return pedido
 
+        },
+        obtenerPedidosPorEstado:async(_,{estado},ctx)=>{
+            
+            try {
+                const pedidos =await Pedido.find({vendedor:ctx.id,estado:estado})
+                return pedidos
+            } catch (error) {
+                console.log(error)
+            }
+
+        },
+        mejoresClientes: async()=>{
+            const clientes = await Pedido.aggregate([
+                //Primer Paso: El filtro
+                {$match: {estado:"COMPLETADO"}},
+                //Segundo Paso: La agrupacion por el campo cliente
+                {$group:{
+                    _id:"$cliente",
+                    //Operador de acumulacion
+                    total:{$sum:"$total"}
+                }},
+                //EL join para poder mostrar los datos del cliente
+                {
+                    $lookup: {
+                      //Nombre de la coleccion donde se hace el Join
+                      from: 'clientes',
+                      //Campo clave de la coleccion pedidos
+                      localField: '_id',
+                      //Campo foraneo de la coleccion clientes
+                      foreignField: '_id',
+                      //Nombre del array con el output de los resultados
+                      as: 'cliente'
+                    }
+                },
+                 //Los 3 primeros clientes
+                 {
+                    $limit:3
+                },
+                //EL sort
+                {
+                    $sort:{total:-1}
+                }
+            ])
+            return clientes
+        },
+        mejoresVendedores: async()=>{
+            const vendedores = await Pedido.aggregate([
+                //Primer Paso: El filtro
+                {$match: {estado:"COMPLETADO"}},
+                //Segundo Paso: La agrupacion por el campo vendedor
+                {$group:{
+                    _id:"$vendedor",
+                    //Operador de acumulacion
+                    total:{$sum:"$total"}
+                }},
+                //EL join para poder mostrar los datos del cliente
+                {
+                    $lookup: {
+                      //Nombre de la coleccion donde se hace el Join
+                      from: 'usuarios',
+                      //Campo clave de la coleccion pedidos
+                      localField: '_id',
+                      //Campo foraneo de la coleccion usuarios
+                      foreignField: '_id',
+                      //Nombre del array con el output de los resultados
+                      as: 'vendedor'
+                    }
+                },
+                //Los 3 primeros vendedores
+                {
+                    $limit:3
+                },
+                //EL sort
+                {
+                    $sort:{total:-1}
+                }
+            ])
+        },
+        buscarProductos: async(_,{texto},ctx)=>{
+            //Para usar el operador $text es necesario crear un indice en el modelo Producto de tipo text. $search buscara los productos que contenga el valor contenido en texto por ejemplo "Monitor"
+            const productos =await Producto.find({$text:{$search: texto}}).limit(10)
+            return productos
         }
 
     },
@@ -295,18 +377,18 @@ export const resolvers = {
         actualizarPedido: async(_,{id,input},ctx)=>
         {
    
-
+             
              const {cliente: clienteId,pedido}= input
             //Validar si pedido existe
             let pedidoExiste = await Pedido.findById(id)
 
-            if (pedidoExiste) {
+            if (!pedidoExiste) {
                 throw new Error('Pedido no existe')
             }
-
+            
             //Validar si el cliente Existe.
             const clienteExiste = await Cliente.findById(clienteId)
-            if(clienteExiste){
+            if(!clienteExiste){
                 throw new Error('Cliente no existe')
             }
 
@@ -332,6 +414,24 @@ export const resolvers = {
             //Guardar el Pedido
             const resultado = await Pedido.findByIdAndUpdate(id,input,{new:true})
             return resultado
+        },
+        eliminarPedido: async(_,{id},ctx)=>{
+            
+            const pedidoExiste =await Pedido.findById(id)
+            if(!pedidoExiste){
+                throw new Error('Pedido no existe')
+            }
+
+            if (pedidoExiste.vendedor.toString() !== ctx.id){
+                throw new Error('No estas autorizado para eliminar el pedido')
+            }
+            try {
+                await Pedido.findByIdAndDelete(id)
+                return "Pedido Eliminado"
+            } catch (error) {
+                console.log(error)
+            }
+            
         }
 
 

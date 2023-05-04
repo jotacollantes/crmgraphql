@@ -45,6 +45,18 @@ type PedidoGrupo {
  id: ID,
  cantidad:Int
 }
+
+type TopCliente {
+    total: Float,
+    #Se define como array porque el lookup de mongo al momento del join devuelve un array
+    cliente:[Cliente]
+}
+
+type TopVendedor {
+    total: Float,
+    #Se define como array porque el lookup de mongo al momento del join devuelve un array
+    vendedor: [Usuario]
+}
 input UsuarioInput {
     nombre: String!
     apellido: String!
@@ -86,6 +98,11 @@ input PedidoProductoInput{
     id: ID,
     cantidad:Int
 }
+
+input EstadoInput{
+    # EstadoPedido es un ENUM
+    estado: EstadoPedido
+}
 enum EstadoPedido{
     PENDIENTE
     COMPLETADO
@@ -103,12 +120,18 @@ type Query {
     #Clientes
     obtenerClientes: [Cliente],
     obtenerClientesPorVendedor: [Cliente],
-    obtenerCliente(id:ID!): Cliente
+    obtenerCliente(id:ID!): Cliente,
 
     # Pedidos
     obtenerPedidos: [Pedido],
     obtenerPedidosVendedor: [Pedido],
-    obtenerPedidoEspecifico(id:ID!): Pedido
+    obtenerPedidoEspecifico(id:ID!): Pedido,
+    obtenerPedidosPorEstado(estado:String!):[Pedido],
+
+    #Busquedas avanzadas
+    mejoresClientes:[TopCliente],
+    mejoresVendedores:[TopVendedor]
+    buscarProductos(texto:String!):[Producto]
     
 }
 
@@ -131,5 +154,6 @@ type Mutation {
     # Pedidos
     nuevoPedido(input: PedidoInput):Pedido
     actualizarPedido(id:ID!,input: PedidoInput):Pedido
+    eliminarPedido(id:ID!):String
 }
 `

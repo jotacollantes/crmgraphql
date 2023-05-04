@@ -251,3 +251,43 @@ query ObtenerPedidosVendedor {
     estado
   }
 }
+mutation ActualizarPedido($actualizarPedidoId: ID!, $input: PedidoInput) {
+  actualizarPedido(id: $actualizarPedidoId, input: $input) {
+    estado
+    cliente
+    fecha
+    pedido {
+      cantidad
+      id
+    }
+  }
+}
+{"actualizarPedidoId": "6451cf4f0ce8f798ed031f70",
+  "input": {
+    "estado": "COMPLETADO",
+    "cliente": "64512d7bb7d82836a181f2d4"
+  }
+}
+mutation Mutation($eliminarPedidoId: ID!) {
+  eliminarPedido(id: $eliminarPedidoId)
+}
+query ObtenerPedidosPorEstado($estado: String!) {
+  obtenerPedidosPorEstado(estado: $estado) {
+    id
+    total
+    vendedor
+  }
+}
+
+query BuscarProductos($texto: String!) {
+  buscarProductos(texto: $texto) {
+    nombre
+    precio
+    id
+    existencia
+    creado
+  }
+}
+{
+  "texto": "monitor"
+}

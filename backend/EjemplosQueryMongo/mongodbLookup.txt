@@ -1,0 +1,119 @@
+Preface: New to the aggregation pipeline? Check out our 5 minute explanation before diving into these $lookup examples....
+
+Also be sure to understand indexing and it's performance implications before reviewing these examples...
+
+$lookup allows you to perform joins on collections in the same database. $lookup works by returning documents from a "joined" collection as a sub-array of the original collection.
+
+$lookup supports both basic equality matches as well as uncorrelated sub-queries. We'll provide an example of each scenario.
+
+The examples are based on this sample data...
+
+post collection
+{
+    "title" : "my first post",
+    "author" : "Jim",
+    "likes" : 5
+},
+{
+    "title" : "my second post",
+    "author" : "Jim",
+    "likes" : 2
+},
+{
+    "title" : "hello world",
+    "author" : "Joe",
+    "likes" : 3
+}
+comment collection
+{
+    "postTitle" : "my first post",
+    "comment" : "great read",
+    "likes" : 3
+},
+{
+    "postTitle" : "my second post",
+    "comment" : "good info",
+    "likes" : 0
+},
+{
+    "postTitle" : "my second post",
+    "comment" : "i liked this post",
+    "likes" : 12
+},
+{
+    "postTitle" : "hello world",
+    "comment" : "not my favorite",
+    "likes" : 8
+},
+{
+    "postTitle" : "my last post",
+    "comment" : null,
+    "likes" : 0
+}
+Notice how we have two collections posts and comments. The postTitle field in the comments collection corresponds to the title field in the posts collection.
+
+Both comments and posts have likes.
+
+$lookup example: equality match
+db.posts.aggregate([
+    { $lookup:
+        {
+           from: "comments",
+           localField: "title",
+           foreignField: "postTitle",
+           as: "comments"
+        }
+    }
+])
+Notice how $lookup takes a document with the following fields:
+
+from: the collection we want to join with
+localField: the field we want to join by in the local collection (the collection we are running the query on)
+foreignField: the field we want to join by in the foreign collection (the collection we want to join with)
+as: the name of the output array for the results
+This query returns the following..
+
+{
+    "title" : "my first post",
+    "author" : "Jim",
+    "likes" : 5,
+    "comments" : [
+        {
+            "postTitle" : "my first post",
+            "comment" : "great read",
+            "likes" : 3
+        }
+    ]
+},
+{
+    "title" : "my second post",
+    "author" : "Jim",
+    "likes" : 2,
+    "comments" : [
+        {
+            "postTitle" : "my second post",
+            "comment" : "good info",
+            "likes" : 0
+        },
+        {
+            "postTitle" : "my second post",
+            "comment" : "i liked this post",
+            "likes" : 12
+        }
+    ]
+},
+{
+    "title" : "hello world",
+    "author" : "Joe",
+    "likes" : 3,
+    "comments" : [
+        {
+            "postTitle" : "hello world",
+            "comment" : "not my favorite",
+            "likes" : 8
+        }
+    ]
+}
+Notice how the original 3 documents from the post collection are returned with an additional field comments.
+
+For each post, this new comments array has all of the documents from the comments collection whose postTitle field matches the post's title field.

@@ -22,7 +22,8 @@ const server= new ApolloServer({
             throw new Error('Token Invalido')
         }
        }
-    }
+    },
+    introspection: true
 
 })
 //Arrancar servidor
