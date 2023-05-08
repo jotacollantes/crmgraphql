@@ -1,2 +1,4 @@
 #Comando para iniciar proyecto
 yarn create next-app --typescript .
+
+#Los archivos _app.tsx (para el punto de arranque del proyecto) y _document.tsx (Para la configuracion de los tags en el <Head>) hay que crearlos manualmente y son obligatorios

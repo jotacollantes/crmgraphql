@@ -12,11 +12,15 @@ const server= new ApolloServer({
     typeDefs,
     resolvers,
     context: ({req})=>{
-        
+       //console.log(req.headers)
        const token=req.headers['authorization']
        if(token){
         try {
+            //En caso de que envien el bearer hay que eliminarlo:
+            // const usuario =utils.verifyToken(token.replace('Bearer ',''),process.env.SECRET_KEY)
+            //console.log({token})
             const usuario =utils.verifyToken(token,process.env.SECRET_KEY)
+            //console.log({usuario})
             return usuario
         } catch (error) {
             throw new Error('Token Invalido')
