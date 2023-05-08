@@ -110,7 +110,8 @@ enum EstadoPedido{
 }
 type Query {
     #Usuarios
-    obtenerUsuario(token: String!): Usuario,
+    # obtenerUsuario(token: String!): Usuario,
+    obtenerUsuario: Usuario,
     
     #Productos
     # No recibe argumentos por ende va sin ()

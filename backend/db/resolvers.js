@@ -4,10 +4,11 @@ import { utils } from "../helpers/utils.js"
 export const resolvers = {
     Query: {
 
-        obtenerUsuario: (_, { token }) => {
-            const usuarioId = utils.verifyToken(token, process.env.SECRET_KEY)
-            console.log(usuarioId)
-            return usuarioId
+        obtenerUsuario: (_, {  },ctx) => {
+            // const usuarioId = utils.verifyToken(token, process.env.SECRET_KEY)
+            // console.log(usuarioId)
+            // return usuarioId
+            return ctx
         },
         obtenerProductos: async () => {
             try {
@@ -41,6 +42,7 @@ export const resolvers = {
         obtenerClientesPorVendedor: async (_, { }, ctx) => {
             try {
                 const clientes = await Cliente.find({ vendedor: ctx.id.toString() })
+                //const clientes = await Cliente.find({ vendedor: ctx.id })
                 return clientes
             } catch (error) {
                 console.log(error)

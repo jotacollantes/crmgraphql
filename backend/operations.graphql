@@ -44,8 +44,17 @@ variables:
   }
 }
 
-query ObtenerUsuario($token: String!) {
-  obtenerUsuario(token: $token) {
+# query ObtenerUsuario($token: String!) {
+#   obtenerUsuario(token: $token) {
+#     email
+#     id
+#     creado
+#     apellido
+#     nombre
+#   }
+# }
+query ObtenerUsuario {
+  obtenerUsuario{
     email
     id
     creado

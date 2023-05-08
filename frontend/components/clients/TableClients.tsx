@@ -12,6 +12,7 @@ interface Props {
   clientes: Cliente[];
 }
 const TableClients = ({ clientes }: Props) => {
+
   return (
     <table className="table-auto shadow-md mt-10 w-full w-lg">
       <thead className="bg-gray-800">
