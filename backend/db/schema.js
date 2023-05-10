@@ -19,6 +19,10 @@ type Cliente {
     vendedor: ID
     creado: String
 }
+type ClienteEliminado{
+    id:ID,
+    mensaje:String
+}
 type Token {
     token: String
 }
@@ -150,7 +154,8 @@ type Mutation {
     # Clientes
     nuevoCliente(input: ClienteInput): Cliente,
     actualizarCliente(id:ID!,input:ClienteInput): Cliente
-    eliminarCliente(id:ID!):String
+    #eliminarCliente(id:ID!):String
+    eliminarCliente(id:ID!):ClienteEliminado
 
     # Pedidos
     nuevoPedido(input: PedidoInput):Pedido

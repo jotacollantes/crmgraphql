@@ -199,11 +199,14 @@ mutation Mutation($actualizarClienteId: ID!, $input: ClienteInput) {
   }
 }
 
-mutation Mutation($eliminarClienteId: ID!) {
-  eliminarCliente(id: $eliminarClienteId)
+mutation EliminarCliente($id: ID!) {
+  eliminarCliente(id: $id) {
+    mensaje
+    id
+  }
 }
 {
-  "eliminarClienteId": "645089027219cef31547032b"
+  "id": "645089027219cef31547032b"
 }
 
 mutation Mutation($input: PedidoInput) {

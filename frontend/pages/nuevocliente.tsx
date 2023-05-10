@@ -2,7 +2,7 @@ import Layout from "@/components/Layout";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import React, { useState } from "react";
-import { useMutation, gql } from "@apollo/client";
+import { useMutation, gql, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { OBTENER_CLIENTES_VENDEDOR } from ".";
 
@@ -25,36 +25,55 @@ const NuevoCliente = () => {
   const [mensajeState, setMensajeState] = useState<any>(null);
   const router = useRouter();
 
+  
 
-  const [nuevoCliente] = useMutation(NUEVO_CLIENTE)
+  // const [nuevoCliente] = useMutation(NUEVO_CLIENTE)
   //la pagina nuevocliente no guarda en cache la informacion que tiene la pagina /clientes
   //En el cache de nuevocliente no tiene en cache el segmento obtenerClientesPorVendedor que si esta en /clientes
 
   //!Cannot destructure property 'obtenerClientesPorVendedor' of 'cache.readQuery(...)' as it is null.
+  //Para el manejo del cache
+  const { data, loading, error } = useQuery(OBTENER_CLIENTES_VENDEDOR);
 
-  /*
-    const [nuevoCliente] = useMutation(NUEVO_CLIENTE,
-    {
-          //Manejo del cache oara no volver a cargar la pagina desde el servidor
-          update(cache,{data:{nuevoCliente}}){
-            //Obtener el objeto de cache que deseamos actualizar
-            const {obtenerClientesPorVendedor}=cache.readQuery<any>({query: OBTENER_CLIENTES_VENDEDOR})
-
-            //Reescribimos el cache sin mutarlo (el cache nunca se debe de modificar)
-            cache.writeQuery({
-                query: OBTENER_CLIENTES_VENDEDOR,
-                //Especificamos que segmento del cache vamos actualizar
-                data:{
-                    //Tomamos una copiua de lo que hay en cache ...obtenerClientesPorVendedor y añadimos al array el nuevo cliente nuevoCliente
-                    obtenerClientesPorVendedor:[...obtenerClientesPorVendedor,nuevoCliente]
-                }
-            })
-
-          }
-    });
-  */
-    
   
+  const [nuevoCliente] = useMutation(NUEVO_CLIENTE, {
+    //Manejo del cache oara no volver a cargar la pagina desde el servidor
+    update(cache, { data: { nuevoCliente } }) {
+      //Obtener el objeto de cache que deseamos actualizar
+      //const {obtenerClientesPorVendedor}=cache.readQuery<any>({query: OBTENER_CLIENTES_VENDEDOR})
+      const cachedData = cache.readQuery<any>({
+        query: OBTENER_CLIENTES_VENDEDOR,
+      });
+      // comprobar si la consulta está en caché
+      if (cachedData) {
+        // reescribir el caché sin mutarlo
+        cache.writeQuery({
+          query: OBTENER_CLIENTES_VENDEDOR,
+          data: {
+            obtenerClientesPorVendedor: [
+              ...cachedData.obtenerClientesPorVendedor,
+              nuevoCliente,
+            ],
+          },
+        });
+      } else {
+        // realizar una consulta al servidor para obtener los datos más actualizados
+        // escribir los nuevos datos en caché
+        console.log('se reescribe el cache')
+        cache.writeQuery({
+          query: OBTENER_CLIENTES_VENDEDOR,
+          data: {
+            obtenerClientesPorVendedor: [
+              ...data.obtenerClientesPorVendedor,
+              nuevoCliente,
+            ],
+          },
+        });
+      }
+    },
+  });
+
+
   const formik = useFormik({
     initialValues: {
       nombre: "",
@@ -75,7 +94,7 @@ const NuevoCliente = () => {
     onSubmit: async (values) => {
       //console.log(values)
       const { nombre, apellido, empresa, email, telefono } = values;
-      console.log({ email });
+      //console.log({ email });
       try {
         const { data } = await nuevoCliente({
           variables: {
@@ -89,18 +108,18 @@ const NuevoCliente = () => {
           },
         });
         //console.log(data);
-        setMensajeState('Cliente registrado exitosamente')
+        setMensajeState("Cliente registrado exitosamente");
         setTimeout(() => {
-            setMensajeState(null)
-            router.push('/')
+          setMensajeState(null);
+          router.push("/");
         }, 3000);
       } catch (error: any) {
-             //console.log(error.message)
-             setMensajeState(error.message)
-             //Para quitar el mensaje de error de la pantalla
-             setTimeout(() => {
-               setMensajeState(null)
-             }, 3000);
+        //console.log(error.message)
+        setMensajeState(error.message);
+        //Para quitar el mensaje de error de la pantalla
+        setTimeout(() => {
+          setMensajeState(null);
+        }, 3000);
       }
     },
   });

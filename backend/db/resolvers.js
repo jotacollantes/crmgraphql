@@ -319,7 +319,10 @@ export const resolvers = {
             //BorrarCliente.
             try {
                 await Cliente.findByIdAndDelete(id)
-                return "Cliente Eliminado"
+                //return "Cliente Eliminado"
+                //console.log(id)
+                return {id: id,mensaje: "Cliente eliminado"}
+               
             } catch (error) {
                 console.log(error)
             }

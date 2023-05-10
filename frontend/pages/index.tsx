@@ -24,7 +24,7 @@ const Home=()=> {
   const router=useRouter()
   const {data,loading,error}=useQuery(OBTENER_CLIENTES_VENDEDOR)
   //console.log({loading})
-  console.log({data})
+  //console.log({data})
 
 
   // Es necesario usar el loading antes de usar el data del useQuery
