@@ -174,15 +174,15 @@ query ObtenerClientesPorVendedor {
     email
   }
 }
-query Query($obtenerClienteId: ID!) {
-  obtenerCliente(id: $obtenerClienteId) {
+query Query($id: ID!) {
+  obtenerCliente(id: $id) {
     nombre
     apellido
   }
 }
 
-mutation Mutation($actualizarClienteId: ID!, $input: ClienteInput) {
-  actualizarCliente(id: $actualizarClienteId, input: $input) {
+mutation Mutation($id: ID!, $input: ClienteInput) {
+  actualizarCliente(id: $id, input: $input) {
     nombre
     apellido
     email
@@ -190,7 +190,7 @@ mutation Mutation($actualizarClienteId: ID!, $input: ClienteInput) {
   }
 }
 {
-  "actualizarClienteId": "645089027219cef31547032b",
+  "id": "645089027219cef31547032b",
   "input": {
     "nombre": "Cliente1 xyz",
     "apellido": "Cliente 1 xyz",
