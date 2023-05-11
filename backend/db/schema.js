@@ -34,6 +34,11 @@ type Producto {
     precio: Float
     creado: String
 }
+
+type ProductoEliminado{
+    id:ID,
+    mensaje:String
+}
 type Pedido {
     id:ID
     pedido:[PedidoGrupo]
@@ -149,7 +154,7 @@ type Mutation {
     # Productos
     nuevoProducto(input: ProductoInput): Producto,
     actualizaProducto(id:ID!,input: ProductoInput): Producto,
-    eliminarProducto(id:ID!): String,
+    eliminarProducto(id:ID!): ProductoEliminado,
 
     # Clientes
     nuevoCliente(input: ClienteInput): Cliente,

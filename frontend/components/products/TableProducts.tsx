@@ -1,50 +1,55 @@
 import React from "react";
-import Swal from 'sweetalert2'
-import { gql,useMutation} from '@apollo/client';
+
 import { useRouter } from 'next/router';
-import { ObtenerClientesPorVendedor } from '../../interfaces/clientesPorVendedor';
-import { OBTENER_CLIENTES_VENDEDOR } from "@/pages";
+import Swal from "sweetalert2";
+import { gql,useMutation } from "@apollo/client";
+import { OBTENER_PRODUCTOS } from "@/pages/productos";
 
 
-const ELIMINAR_CLIENTE=gql`mutation Mutation($id: ID!) {
-  eliminarCliente(id: $id) {
+
+
+type Producto = {
+  id: string;
+  nombre: string;
+  existencia: string;
+  precio: string;
+  
+};
+interface Props {
+  products: Producto[];
+}
+
+const ELIMINAR_PRODUCTO=gql`
+mutation eliminarProducto($id: ID!) {
+  eliminarProducto(id: $id)
+  {
     mensaje
     id
   }
 }`
-type Cliente = {
-  id: string;
-  nombre: string;
-  apellido: string;
-  empresa: string;
-  email: string;
-  vendedor: string;
-};
-interface Props {
-  clientes: Cliente[];
-}
-const TableClients = ({ clientes }: Props) => {
+const TableProducts = ({ products }: Props) => {
   const router=useRouter()
-  //const [eliminarCliente]=useMutation(ELIMINAR_CLIENTE)
-  
-  const [eliminarCliente]=useMutation(ELIMINAR_CLIENTE,{
-    update(cache,{data:{eliminarCliente}}  ){
-      //console.log(data.data.eliminarCliente.id)
+  const [eliminarProducto,{data,loading,error}]=useMutation(ELIMINAR_PRODUCTO,{
+    update(cache,{data:{eliminarProducto}}  ){
+      //console.log(data.data.eliminarProducto.id)
       //Obtener una copia del cache
       
-      const {obtenerClientesPorVendedor}=cache.readQuery<any>({query: OBTENER_CLIENTES_VENDEDOR})
+      const {obtenerProductos}=cache.readQuery<any>({query: OBTENER_PRODUCTOS})
       //Reescribir el cache
       cache.writeQuery({
-        query: OBTENER_CLIENTES_VENDEDOR,
+        query: OBTENER_PRODUCTOS,
         //Que segmento del cache vamos a actualizar
         data:{
-          obtenerClientesPorVendedor: obtenerClientesPorVendedor.filter((cliente:any)=>cliente.id !== eliminarCliente.id)
+          obtenerProductos: obtenerProductos.filter((producto:any)=>producto.id !== eliminarProducto.id)
         }
       })
     }
   })
+
   
-  const deleteCliente=(id:string)=>{
+
+  const confirmarEliminarProducto=(id:string)=>{
+    //console.log(id)
     Swal.fire({
       title: 'Deseas eliminar a este cliente?',
       text: "Esta accion no se puede reversar",
@@ -59,19 +64,14 @@ const TableClients = ({ clientes }: Props) => {
       if (result.isConfirmed) {
         //console.log('eliminando ',id)
          try {
-          //Eliminar por ID
-          const {data}=await eliminarCliente({
-            variables:{
-              id: id
-            }})
-          //Mostrar Alerta
-          
-           Swal.fire(
-          'Cliente eliminado!',
-          //'Your file has been deleted.',
-          data.eliminarCliente.mensaje,
-          'success')
-          
+         const {data}=await eliminarProducto({variables:{id:id}})
+          //console.log(data)
+          Swal.fire(
+            'Producto eliminado!',
+            //'Your file has been deleted.',
+            data.eliminarProducto.mensaje,
+            
+            'success')
          } catch (error:any) {
           console.log(error.message)
          }
@@ -79,40 +79,34 @@ const TableClients = ({ clientes }: Props) => {
        
       }
     })
-  }
-
-  const editarCliente=(id:string)=>{
-    //Para cargar paginas dinamicas en NEXT
-    router.push({
-      pathname:`/editarcliente/[id]`,
-      query: {id:id}})
 
   }
+
 
   return (
     <table className="table-auto shadow-md mt-10 w-full w-lg">
       <thead className="bg-gray-800">
         <tr className="text-white">
           <th className="w-1/5 py-2">Nombre</th>
-          <th className="w-1/5 py-2">Empresa</th>
-          <th className="w-1/5 py-2">Email</th>
+          <th className="w-1/5 py-2">Existencia</th>
+          <th className="w-1/5 py-2">Precio</th>
           <th className="w-1/5 py-2">Eliminar</th>
           <th className="w-1/5 py-2">Editar</th>
         </tr>
       </thead>
       <tbody className="bg-white">
-        {clientes.map((cliente, ix: number) => {
+        {products.map((product, ix: number) => {
           
 
           return (
             <tr key={ix}>
-              <td className="border px-4 py-2">{`${cliente.nombre} ${cliente.apellido}`}</td>
-              <td className="border px-4 py-2">{`${cliente.empresa}`}</td>
-              <td className="border px-4 py-2">{`${cliente.email}`}</td>
+              <td className="border px-4 py-2">{`${product.nombre}`}</td>
+              <td className="border px-4 py-2">{`${product.existencia}`}</td>
+              <td className="border px-4 py-2">{`$ ${product.precio}`}</td>
               <td className="border px-4 py-2">
                 <button
                 className="flex justify-center items-center bg-red-800 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold"
-                onClick={()=>deleteCliente(cliente.id)}
+                onClick={()=>confirmarEliminarProducto(product.id)}
                 >
                   Eliminar
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 ml-4">
@@ -124,7 +118,7 @@ const TableClients = ({ clientes }: Props) => {
               <td className="border px-4 py-2">
                 <button
                 className="flex justify-center items-center bg-green-600 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold"
-                onClick={()=>editarCliente(cliente.id)}
+                //onClick={}
                 >
                   Editar
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 ml-4">
@@ -142,4 +136,4 @@ const TableClients = ({ clientes }: Props) => {
   );
 };
 
-export default TableClients;
+export default TableProducts;

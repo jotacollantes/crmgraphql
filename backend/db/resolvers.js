@@ -264,7 +264,8 @@ export const resolvers = {
             }
             try {
                 await Producto.findByIdAndDelete(id)
-                return "Producto Eliminado"
+                //return "Producto Eliminado"
+                return {id: id,mensaje: "Producto eliminado"}
             } catch (error) {
                 console.log(error)
             }
