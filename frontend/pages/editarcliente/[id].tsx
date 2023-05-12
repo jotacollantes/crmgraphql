@@ -128,7 +128,7 @@ const EditarCliente = () => {
     }
   return (
     <Layout>
-        <h1>Editar cliente</h1>
+        <h1 className="text-2xl text-gray-800 font-light">Editar Cliente</h1>
         <div className="flex justify-center mt-5">
         <div className="w-full max-w-lg">
             {/* En este caso el formulario ya va a estar precargados con los datos del cliente traidos desde la BD por lo tanto se va a usar el componente de formik y no el hook useFormik */}
@@ -174,7 +174,7 @@ const EditarCliente = () => {
               <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
                 {/* <p>{props.errors.nombre}</p>  */}
                 
-                <ErrorMessage name="nombre" component='span'/>
+                <ErrorMessage name="nombre" />
                                
               </div>
             )}

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useRouter } from 'next/router';
+import {useRouter} from 'next/router';
 import Swal from "sweetalert2";
 import { gql,useMutation } from "@apollo/client";
 import { OBTENER_PRODUCTOS } from "@/pages/productos";
@@ -81,7 +81,12 @@ const TableProducts = ({ products }: Props) => {
     })
 
   }
-
+const editarProducto=(id:string)=>{
+  router.push({
+    pathname: "/editarproducto/[id]",
+    query: {id:id}
+  })
+}
 
   return (
     <table className="table-auto shadow-md mt-10 w-full w-lg">
@@ -118,7 +123,7 @@ const TableProducts = ({ products }: Props) => {
               <td className="border px-4 py-2">
                 <button
                 className="flex justify-center items-center bg-green-600 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold"
-                //onClick={}
+                onClick={()=>editarProducto(product.id)}
                 >
                   Editar
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 ml-4">
