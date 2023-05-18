@@ -77,14 +77,16 @@ export const resolvers = {
         },
         obtenerPedidosVendedor: async(_,{},ctx)=>{
             try {
-                const pedidos = await Pedido.find({vendedor:ctx.id})
+                //Con populate traemos los datos del modelo cliente, en el modelo Pedido tenemos registro el ID del cliente
+                const pedidos = await Pedido.find({vendedor:ctx.id}).populate('cliente')
+                //console.log(pedidos)
                 return pedidos
             } catch (error) {
                 console.log(error)
             }
         },
         obtenerPedidoEspecifico: async(_,{id},ctx)=>{
-            console.log(id)
+            //console.log(id)
             //Verificar si pedido existe
             const pedido = await Pedido.findById(id)
             if(!pedido){
@@ -265,7 +267,10 @@ export const resolvers = {
             try {
                 await Producto.findByIdAndDelete(id)
                 //return "Producto Eliminado"
-                return {id: id,mensaje: "Producto eliminado"}
+                return {
+                    id: id,
+                    mensaje: "Producto eliminado"
+                }
             } catch (error) {
                 console.log(error)
             }
@@ -361,7 +366,7 @@ export const resolvers = {
             for (const item of input.pedido) {
                 const producto = await Producto.findById(item.id)
                 if(item.cantidad > producto.existencia){
-                    throw new Error('Cantidad de productos solicitados no disponible')
+                    throw new Error(`Cantidad de productos solicitados no disponible en: ${producto.nombre}`)
                 }
                 else {
                     //Actualizamos la existencia
@@ -433,7 +438,12 @@ export const resolvers = {
             }
             try {
                 await Pedido.findByIdAndDelete(id)
-                return "Pedido Eliminado"
+                //return "Pedido Eliminado"
+                return {
+                    id : id,
+                    mensaje: "Pedido Eliminado"
+                }
+
             } catch (error) {
                 console.log(error)
             }

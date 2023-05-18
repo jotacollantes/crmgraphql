@@ -43,7 +43,8 @@ type Pedido {
     id:ID
     pedido:[PedidoGrupo]
     total: Float
-    cliente:ID
+    #cliente:ID, ahora la propiedad cliente en el pedido tiene el type Cliente
+    cliente: Cliente
     vendedor:ID
     fecha: String
     #Enum EstadoPedido
@@ -52,7 +53,9 @@ type Pedido {
 type PedidoGrupo {
  #id del producto
  id: ID,
- cantidad:Int
+ cantidad:Int,
+ nombre:String,
+ precio: Float
 }
 
 type TopCliente {
@@ -105,7 +108,9 @@ input PedidoInput{
 input PedidoProductoInput{
     #id del producto
     id: ID,
-    cantidad:Int
+    cantidad:Int,
+    nombre:String,
+    precio: Float
 }
 
 input EstadoInput{
@@ -117,6 +122,11 @@ enum EstadoPedido{
     COMPLETADO
     CANCELADO
 }
+type RespuestaEliminar{
+    id:ID,
+    mensaje:String
+    }
+    
 type Query {
     #Usuarios
     # obtenerUsuario(token: String!): Usuario,
@@ -165,6 +175,7 @@ type Mutation {
     # Pedidos
     nuevoPedido(input: PedidoInput):Pedido
     actualizarPedido(id:ID!,input: PedidoInput):Pedido
-    eliminarPedido(id:ID!):String
+    #eliminarPedido(id:ID!):String
+    eliminarPedido(id:ID!):RespuestaEliminar
 }
 `

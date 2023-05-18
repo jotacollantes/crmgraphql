@@ -253,8 +253,10 @@ query ObtenerPedidosVendedor {
   obtenerPedidosVendedor {
     id
     pedido {
-      id
-      cantidad
+ id,
+ cantidad,
+ nombre,
+ precio
     }
     total
     cliente

@@ -59,7 +59,7 @@ const NuevoCliente = () => {
       } else {
         // realizar una consulta al servidor para obtener los datos más actualizados
         // escribir los nuevos datos en caché
-        console.log('se reescribe el cache')
+        //console.log('se reescribe el cache')
         cache.writeQuery({
           query: OBTENER_CLIENTES_VENDEDOR,
           data: {
