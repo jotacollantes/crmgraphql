@@ -14,18 +14,23 @@ const NUEVO_PEDIDO = gql`
   mutation Mutation($input: PedidoInput) {
     nuevoPedido(input: $input) {
       id
-    pedido {
-      id
-      cantidad
-      
-    }
-    total
-    cliente {
-      nombre
-      
-      
-    }
-    estado
+      estado
+      total
+      vendedor
+      fecha
+      pedido {
+        id
+        cantidad
+        precio
+        nombre
+      }
+      cliente {
+        id
+        nombre
+        apellido
+        email
+        telefono
+        }
     }
   }
 `;
@@ -34,9 +39,13 @@ const NuevoPedido = () => {
   const { cliente, productos, total } = usePedido();
   const [mensaje, setMensaje] = useState<any>(null);
   const router = useRouter();
+
+  
   //Mutation para crear nuevo pedido
   const [nuevoPedido] = useMutation(NUEVO_PEDIDO, {
+    //! La salida de nuevoPedido debe de tener el mismo esquema de salida de obtenerPedidosVendedor: [Pedido] para que haya consistencia al momento de actualizar el cache
     update(cache, { data: { nuevoPedido } }) {
+      //console.log(nuevoPedido)
       const { obtenerPedidosVendedor } = cache.readQuery<any>({
         query: OBTENER_PEDIDOS_POR_VENDEDOR,
       });
@@ -76,13 +85,18 @@ const NuevoPedido = () => {
       };
     });
 
+    //console.log(total)
+    //console.log(cliente.id)
+    //console.log(nuevoArrayProductos)
+
     try {
       const { data } = await nuevoPedido({
         variables: {
           input: {
             total: total,
             cliente: cliente.id,
-            estado: "PENDIENTE",
+            //PENDIENTE es valor por Default
+            //estado: "PENDIENTE",
             pedido: nuevoArrayProductos,
           },
         },
@@ -91,7 +105,7 @@ const NuevoPedido = () => {
       Swal.fire("Correcto", "Pedido Creado Correctamente", "success");
       router.push("/pedidos");
     } catch (error: any) {
-      //console.log(error.message)
+      console.log(error.message)
       setMensaje(error.message);
       setTimeout(() => {
         setMensaje(null);

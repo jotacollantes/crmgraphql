@@ -9,6 +9,7 @@ import { usePedido } from '@/hooks/usePedido'
 
 
 
+
 // const clientes = [
 //   { id: '1', nombre: 'tito' },
 //   { id: '2', nombre: 'jota' },
@@ -17,6 +18,11 @@ import { usePedido } from '@/hooks/usePedido'
 const AsignarCliente = () => {
   const [cliente, setCliente] = useState<any>([])
   const {data,loading,error} = useQuery(OBTENER_CLIENTES_VENDEDOR)
+  
+  
+   //console.log(error)
+
+
   const {addCliente}=usePedido()
   
 //console.log(data)
@@ -30,6 +36,9 @@ const AsignarCliente = () => {
       setCliente(cliente)
   }
 
+
+
+  
   if(loading){
     
     return (<h1>Cargando....</h1>)

@@ -27,6 +27,9 @@ const Home=()=> {
 //console.log({data})
 //console.log({error})
 
+  if(error){
+    return router.push('/auth/login')
+  }
   // Es necesario usar el loading antes de usar el data del useQuery
   if(loading){
     

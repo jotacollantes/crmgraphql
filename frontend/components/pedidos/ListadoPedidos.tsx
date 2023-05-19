@@ -1,4 +1,4 @@
-
+import { OBTENER_PEDIDOS_POR_VENDEDOR } from "@/pages/pedidos";
 import { gql, useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
@@ -43,13 +43,13 @@ const ELIMINAR_PEDIDO=gql`mutation Mutation($id: ID!) {
   }`
 
 
-export const OBTENER_PEDIDOS_POR_VENDEDOR = gql`
-  query ObtenerPedidosVendedor {
-    obtenerPedidosVendedor {
-      id
-      }
-  }
-`;
+//const OBTENER_PEDIDOS_POR_VENDEDOR = gql`
+  //query ObtenerPedidosVendedor {
+    //obtenerPedidosVendedor {
+      //id
+      //}
+  //}
+//`;
 
 export const ListadoPedidos = ({ pedido }: Props) => {
   //console.log(pedido)

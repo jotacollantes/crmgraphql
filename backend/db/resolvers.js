@@ -40,6 +40,12 @@ export const resolvers = {
 
         },
         obtenerClientesPorVendedor: async (_, { }, ctx) => {
+            //console.log("aqui",ctx)
+            //SI no llega el token:
+            if (!ctx.id) {
+                throw new Error('no ha iniciado session');
+            }
+
             try {
                 const clientes = await Cliente.find({ vendedor: ctx.id.toString() })
                 //const clientes = await Cliente.find({ vendedor: ctx.id })
@@ -350,6 +356,7 @@ export const resolvers = {
         // }
             
             //Verificar si cliente existe o no
+            //console.log(input)
             const {cliente}=input
             
             let clienteExiste= await Cliente.findById(cliente)
@@ -362,7 +369,7 @@ export const resolvers = {
                 throw new Error('No esta autorizado para generar este pedido')
             }
             //Revisar que el stock este disponible
-            console.log(input.pedido)
+            //console.log(input.pedido)
             for (const item of input.pedido) {
                 const producto = await Producto.findById(item.id)
                 if(item.cantidad > producto.existencia){
@@ -382,7 +389,16 @@ export const resolvers = {
             nuevoPedido.vendedor=ctx.id
             //Guardarlo en la base de dato
             const resultado =await nuevoPedido.save()
-            return resultado
+            const {id}=resultado
+
+            //console.log(resultado,id)
+            //return resultado
+
+            //Con populate traemos los datos del modelo cliente, en el modelo Pedido tenemos registro el ID del cliente
+            //! Tengo que retornar la informacion del pedido con el mismo esquema de salida de obtenerPedidosVendedor: [Pedido] para que haya consistencia en el cache
+            const pedido = await Pedido.findById(id).populate('cliente')
+            //console.log(pedido)
+            return pedido
         },
 
         actualizarPedido: async(_,{id,input},ctx)=>
