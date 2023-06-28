@@ -36,6 +36,13 @@ const Home=()=> {
     return (<h1>Cargando....</h1>)
   }
 
+  if(!localStorage.getItem("token"))
+  {
+    //console.log('entro')
+    return router.push('/auth/login')
+    }
+
+
   if(!data.obtenerClientesPorVendedor){
     //console.log('entro')
     return router.push('/auth/login')

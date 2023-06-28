@@ -74,14 +74,14 @@ const Login = () => {
     <Layout>
       {
       mensajeState && (
-      <div className="bg-white py-2 px-3 w-full my-3 max-w-sm text-center mx-auto">
+      <div className="bg-white py-2 px-3 w-full my-3 max-w-sm text-center mx-auto ">
                <p>{mensajeState}</p>
              </div>
       
         )
       }
       <h1 className="text-center text-2xl text-white font-light">Login</h1>
-      <div className="flex justify-center mt-5">
+      <div className="flex justify-center mt-5 border-2 border-white ">
         <div className="w-full max-w-sm">
           <form onSubmit={formik.handleSubmit} className="bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4">
             <div className="mb-4">

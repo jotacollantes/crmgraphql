@@ -45,14 +45,21 @@ const NuevoPedido = () => {
   const [nuevoPedido] = useMutation(NUEVO_PEDIDO, {
     //! La salida de nuevoPedido debe de tener el mismo esquema de salida de obtenerPedidosVendedor: [Pedido] para que haya consistencia al momento de actualizar el cache
     update(cache, { data: { nuevoPedido } }) {
-      //console.log(nuevoPedido)
+      console.log('Cache objeto nuevo pedido:',nuevoPedido)
       const { obtenerPedidosVendedor } = cache.readQuery<any>({
         query: OBTENER_PEDIDOS_POR_VENDEDOR,
       });
+      
+      //console.log('cache obtenerPedidosVendedor: ',obtenerPedidosVendedor)
+      
+      //let newArray =obtenerPedidosVendedor.map((pedido:any)=> pedido)
+      //newArray.push(nuevoPedido)
+      console.log(nuevoPedido)
       cache.writeQuery({
         query: OBTENER_PEDIDOS_POR_VENDEDOR,
         data: {
-          obtenerPedidosVendedor: [...obtenerPedidosVendedor, nuevoPedido],
+          obtenerPedidosVendedor: [...obtenerPedidosVendedor,nuevoPedido],
+          //obtenerPedidosVendedor: newArray,
         },
       });
     },

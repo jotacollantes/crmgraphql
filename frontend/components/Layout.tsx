@@ -16,7 +16,7 @@ const Layout = ({ children }: Props) => {
       </Head>
 
       {router.pathname==="/auth/login" || router.pathname==="/auth/register" ?
-      (<div className="bg-gray-800 min-h-screen flex flex-col justify-center">
+      (<div className="bg-gray-800 min-h-screen flex flex-col justify-center border-2 border-white">
         <div>
           {children}
         </div>
